@@ -295,7 +295,7 @@ export const SkinViewer3D = forwardRef<SkinViewer3DHandle, Props>(function SkinV
       const t = toolRef.current;
       if (t === "none") return false;
       const hit = getMeshIntersection(clientX, clientY);
-      if (!hit || hit.faceIndex === undefined || !hit.uv) return false;
+      if (!hit || hit.faceIndex == null || !hit.uv) return false;
       const mesh = hit.object as THREE.Mesh;
       const rects: UvRect[] | undefined = mesh.userData.faceRects;
       if (!rects) return false;
