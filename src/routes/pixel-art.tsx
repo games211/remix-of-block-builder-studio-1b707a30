@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useTheme } from "@/hooks/use-theme";
 import {
   Boxes,
   Image as ImageIcon,
@@ -57,10 +58,7 @@ export const Route = createFileRoute("/pixel-art")({
 });
 
 function PixelArtTool() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const [versionId, setVersionId] = useState<string>("java:1.21.11");
   const version = parseVersionId(versionId).version;
