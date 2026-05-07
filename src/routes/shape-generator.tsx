@@ -18,6 +18,7 @@ import {
   Menu,
   Home as HomeIcon,
   Image as ImageIcon,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -175,9 +176,13 @@ function Home() {
                   <ImageIcon className="h-4 w-4" />
                   Image to Pixel Art
                 </Link>
-                <div className="px-3 py-2 text-xs uppercase tracking-wider text-muted-foreground">
-                  More tools coming soon
-                </div>
+                <Link
+                  to="/gradient"
+                  className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-left text-sm font-medium hover:bg-accent/40"
+                >
+                  <Palette className="h-4 w-4" />
+                  Block Gradient
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
