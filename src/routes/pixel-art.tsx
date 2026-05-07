@@ -39,6 +39,7 @@ import {
   isAvailableIn,
   nearestBlock,
   blockTexture,
+  blockSwatchStyle,
   type BlockDef,
 } from "@/lib/blocks";
 import { PixelArt3D, type PixelGrid } from "@/components/PixelArt3D";
@@ -371,17 +372,11 @@ function PixelArtTool() {
               <div className="max-h-72 overflow-y-auto pr-1">
                 <ul className="space-y-1">
                   {materials.map((m) => {
-                    const tex = blockTexture(m.id);
                     return (
                       <li key={m.id} className="flex items-center gap-2 rounded-md border border-border bg-card/50 px-2 py-1 text-xs">
                         <span
                           className="h-5 w-5 shrink-0 rounded-sm border border-border bg-center bg-no-repeat"
-                          style={{
-                            backgroundColor: m.hex,
-                            backgroundImage: tex ? `url(${tex})` : undefined,
-                            backgroundSize: "100% 100%",
-                            imageRendering: "pixelated",
-                          }}
+                          style={blockSwatchStyle(m.id, m.hex)}
                         />
                         <span className="flex-1 truncate">{m.name}</span>
                         <span className="tabular-nums text-muted-foreground">{stacksOf(m.count)}</span>
