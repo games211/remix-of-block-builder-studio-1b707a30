@@ -504,6 +504,20 @@ export function blockTexture(id: string): string | undefined {
   return BLOCK_TEXTURES[id]?.texture;
 }
 
+/** CSS style props for rendering a block swatch with proper biome tint. */
+export function blockSwatchStyle(id: string, hex: string): React.CSSProperties {
+  const tex = blockTexture(id);
+  const tint = blockTint(id);
+  const base: React.CSSProperties = {
+    backgroundColor: tint ?? hex,
+    backgroundImage: tex ? `url(${tex})` : undefined,
+    backgroundSize: "100% 100%",
+    imageRendering: "pixelated",
+  };
+  if (tint && tex) base.backgroundBlendMode = "multiply";
+  return base;
+}
+
 export function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   return [
