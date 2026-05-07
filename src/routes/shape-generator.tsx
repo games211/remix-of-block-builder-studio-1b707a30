@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useTheme } from "@/hooks/use-theme";
 import {
   Boxes,
   Circle,
@@ -99,7 +100,7 @@ function NumberSlider({
 }
 
 function Home() {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const { theme, toggle: toggleTheme } = useTheme();
   const [shape, setShape] = useState<ShapeType>("sphere");
   const [rx, setRx] = useState(12);
   const [ry, setRy] = useState(12);
@@ -110,10 +111,6 @@ function Home() {
   const [view, setView] = useState<"2d" | "3d">("2d");
   const [isolateLayer, setIsolateLayer] = useState(false);
   const [zoom, setZoom] = useState(1);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
 
   const voxels = useMemo(() => {
     return generateShape({ type: shape, rx, ry, rz, hollow, thickness });
@@ -199,7 +196,7 @@ function Home() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+            onClick={toggleTheme}
             aria-label="Toggle theme"
           >
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
