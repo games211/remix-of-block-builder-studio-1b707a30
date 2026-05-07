@@ -465,6 +465,41 @@ for (const b of BLOCKS) {
   if (t) b.hex = t.hex;
 }
 
+// Biome tints — Minecraft tints these textures at runtime (grayscale source).
+// Apply a representative tint so swatches and color matching look correct.
+const BLOCK_TINTS: Record<string, string> = {
+  grass_block: "#79c05a",
+  oak_leaves: "#48b518",
+  birch_leaves: "#80a755",
+  spruce_leaves: "#619961",
+  jungle_leaves: "#48b518",
+  acacia_leaves: "#48b518",
+  dark_oak_leaves: "#48b518",
+  mangrove_leaves: "#48b518",
+  azalea_leaves: "#48b518",
+  flowering_azalea_leaves: "#48b518",
+  vine: "#48b518",
+};
+
+// Apply tints: combine grayscale luminance with tint color so the stored hex
+// (used for nearest-color matching) matches the in-game appearance.
+for (const b of BLOCKS) {
+  const tint = BLOCK_TINTS[b.id];
+  if (!tint) continue;
+  const [tr, tg, tb] = hexToRgb(tint);
+  const [r, g, bl] = hexToRgb(b.hex);
+  // luminance of grayscale base
+  const l = (0.2126 * r + 0.7152 * g + 0.0722 * bl) / 255;
+  const mr = Math.round(tr * l);
+  const mg = Math.round(tg * l);
+  const mb = Math.round(tb * l);
+  b.hex = "#" + [mr, mg, mb].map((v) => v.toString(16).padStart(2, "0")).join("");
+}
+
+export function blockTint(id: string): string | undefined {
+  return BLOCK_TINTS[id];
+}
+
 export function blockTexture(id: string): string | undefined {
   return BLOCK_TEXTURES[id]?.texture;
 }
