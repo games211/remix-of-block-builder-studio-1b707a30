@@ -202,9 +202,9 @@ export const SkinViewer3D = forwardRef<SkinViewer3DHandle, Props>(function SkinV
     const canvas = document.createElement("canvas");
     canvas.width = 64; canvas.height = 64;
     const gridCanvas = document.createElement("canvas");
-    gridCanvas.width = 64; gridCanvas.height = 64;
+    gridCanvas.width = 512; gridCanvas.height = 512;
     const composed = document.createElement("canvas");
-    composed.width = 64; composed.height = 64;
+    composed.width = 512; composed.height = 512;
 
     const texture = new THREE.CanvasTexture(composed);
     texture.magFilter = THREE.NearestFilter;
@@ -243,31 +243,25 @@ export const SkinViewer3D = forwardRef<SkinViewer3DHandle, Props>(function SkinV
     const compose = () => {
       const ctx = composed.getContext("2d")!;
       ctx.imageSmoothingEnabled = false;
-      ctx.clearRect(0, 0, 64, 64);
-      ctx.drawImage(canvas, 0, 0);
+      ctx.clearRect(0, 0, 512, 512);
+      ctx.drawImage(canvas, 0, 0, 512, 512);
       if (state.showGrid) ctx.drawImage(gridCanvas, 0, 0);
       texture.needsUpdate = true;
     };
 
     const drawGrid = () => {
       const ctx = gridCanvas.getContext("2d")!;
-      ctx.clearRect(0, 0, 64, 64);
-      const img = ctx.createImageData(64, 64);
-      // 1px checker-style grid: every other pixel a faint dark dot — too noisy.
-      // Better: draw lines at every 1 pixel using semi-transparent black on a 1px grid is
-      // impractical at 64px. Instead, mark pixel boundaries as a light overlay every pixel
-      // using a checker offset based on (x+y) parity.
-      for (let y = 0; y < 64; y++) {
-        for (let x = 0; x < 64; x++) {
-          const i = (y * 64 + x) * 4;
-          const on = (x + y) % 2 === 0;
-          img.data[i] = 0;
-          img.data[i + 1] = 0;
-          img.data[i + 2] = 0;
-          img.data[i + 3] = on ? 60 : 0;
-        }
+      ctx.clearRect(0, 0, 512, 512);
+      // Upscaled 64x64 atlas → 512x512: one cell = 8px. Draw thin lines on every pixel boundary.
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 64; i++) {
+        const p = i * 8 + 0.5;
+        ctx.beginPath();
+        ctx.moveTo(p, 0); ctx.lineTo(p, 512);
+        ctx.moveTo(0, p); ctx.lineTo(512, p);
+        ctx.stroke();
       }
-      ctx.putImageData(img, 0, 0);
     };
     drawGrid();
     compose();
