@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
 import {
   Boxes,
@@ -14,6 +14,8 @@ import {
   Search,
   Eye,
   EyeOff,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -32,6 +34,14 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { SkinViewer3D, type BodyPartKey, type Visibility } from "@/components/SkinViewer3D";
 import steveSkin from "@/assets/steve.png";
+import alexSkin from "@/assets/alex.png";
+import ariSkin from "@/assets/ari.png";
+import efeSkin from "@/assets/efe.png";
+import kaiSkin from "@/assets/kai.png";
+import makenaSkin from "@/assets/makena.png";
+import noorSkin from "@/assets/noor.png";
+import sunnySkin from "@/assets/sunny.png";
+import zuriSkin from "@/assets/zuri.png";
 
 export const Route = createFileRoute("/skin-editor")({
   component: SkinEditor,
@@ -56,10 +66,81 @@ const PART_LIST: { key: BodyPartKey; label: string }[] = [
   { key: "leftLeg", label: "Left Leg" },
 ];
 
+const DEFAULT_SKINS: { name: string; url: string }[] = [
+  { name: "Steve", url: steveSkin },
+  { name: "Alex", url: alexSkin },
+  { name: "Ari", url: ariSkin },
+  { name: "Efe", url: efeSkin },
+  { name: "Kai", url: kaiSkin },
+  { name: "Makena", url: makenaSkin },
+  { name: "Noor", url: noorSkin },
+  { name: "Sunny", url: sunnySkin },
+  { name: "Zuri", url: zuriSkin },
+];
+
 function SkinEditor() {
   const { theme, toggle: toggleTheme } = useTheme();
 
-  const [skinUrl, setSkinUrl] = useState<string>(steveSkin);
+  const [skinUrl, setSkinUrlState] = useState<string>(steveSkin);
+  const [past, setPast] = useState<string[]>([]);
+  const [future, setFuture] = useState<string[]>([]);
+
+  const setSkinUrl = useCallback(
+    (next: string) => {
+      setSkinUrlState((current) => {
+        if (current === next) return current;
+        setPast((p) => [...p.slice(-49), current]);
+        setFuture([]);
+        return next;
+      });
+    },
+    [],
+  );
+
+  const undo = useCallback(() => {
+    setPast((p) => {
+      if (!p.length) return p;
+      const prev = p[p.length - 1];
+      setSkinUrlState((curr) => {
+        setFuture((f) => [curr, ...f].slice(0, 50));
+        return prev;
+      });
+      return p.slice(0, -1);
+    });
+  }, []);
+
+  const redo = useCallback(() => {
+    setFuture((f) => {
+      if (!f.length) return f;
+      const next = f[0];
+      setSkinUrlState((curr) => {
+        setPast((p) => [...p.slice(-49), curr]);
+        return next;
+      });
+      return f.slice(1);
+    });
+  }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === "z") {
+        e.preventDefault();
+        undo();
+      } else if (
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "z") ||
+        ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y")
+      ) {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [showOuter, setShowOuter] = useState(true);
@@ -117,6 +198,9 @@ function SkinEditor() {
     toast.success("Reset to Steve");
   };
 
+  const canUndo = past.length > 0;
+  const canRedo = future.length > 0;
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Toaster />
@@ -170,6 +254,33 @@ function SkinEditor() {
 
       <div className="mx-auto grid max-w-[1600px] gap-4 sm:gap-6 px-3 sm:px-4 py-4 sm:py-6 lg:grid-cols-[360px_1fr]">
         <aside className="space-y-4">
+          <Card className="p-2">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 gap-2"
+                onClick={undo}
+                disabled={!canUndo}
+                title="Undo (Ctrl+Z)"
+              >
+                <Undo2 className="h-4 w-4" />
+                Undo
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 gap-2"
+                onClick={redo}
+                disabled={!canRedo}
+                title="Redo (Ctrl+Shift+Z)"
+              >
+                <Redo2 className="h-4 w-4" />
+                Redo
+              </Button>
+            </div>
+          </Card>
+
           <Card className="p-4 space-y-3" style={{ backgroundImage: "var(--gradient-surface)" }}>
             <Label className="text-xs uppercase tracking-wider text-muted-foreground">
               Import skin
@@ -219,6 +330,43 @@ function SkinEditor() {
             <p className="text-[11px] text-muted-foreground">
               Loads the player's current Java Edition skin.
             </p>
+          </Card>
+
+          <Card className="p-4 space-y-3">
+            <Label className="text-xs uppercase tracking-wider text-muted-foreground">
+              Default skins
+            </Label>
+            <div className="grid grid-cols-3 gap-2">
+              {DEFAULT_SKINS.map((s) => {
+                const active = skinUrl === s.url;
+                return (
+                  <button
+                    key={s.name}
+                    onClick={() => {
+                      setSkinUrl(s.url);
+                      toast.success(`Loaded ${s.name}`);
+                    }}
+                    title={s.name}
+                    className={`group flex flex-col items-center gap-1 rounded-md border p-2 transition-colors ${
+                      active
+                        ? "border-primary bg-accent/40"
+                        : "border-border hover:bg-accent/40"
+                    }`}
+                  >
+                    <div
+                      className="h-12 w-12 rounded-sm bg-no-repeat [image-rendering:pixelated]"
+                      style={{
+                        backgroundImage: `url(${s.url})`,
+                        // crop to head front: 8x8 at (8,8) on 64x64 atlas → scale 6x → 48px, bg-size 384x384, position -48 -48
+                        backgroundSize: "384px 384px",
+                        backgroundPosition: "-48px -48px",
+                      }}
+                    />
+                    <span className="text-[11px] font-medium">{s.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </Card>
 
           <Card className="p-4 space-y-3">
