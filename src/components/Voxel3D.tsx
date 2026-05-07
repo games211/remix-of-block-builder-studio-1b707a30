@@ -200,7 +200,7 @@ export function Voxel3D({ voxels, highlightLayer, isolateLayer = false }: Props)
         for (let x = 0; x < w; x++) {
           if (!voxels[z][y][x]) continue;
           if (isolateLayer && hlIdx >= 0 && z !== hlIdx) continue;
-          if (z === hlIdx) hlCount++;
+          if (z === hlIdx && !isolateLayer) hlCount++;
           else baseCount++;
         }
       }
@@ -222,7 +222,7 @@ export function Voxel3D({ voxels, highlightLayer, isolateLayer = false }: Props)
           if (isolateLayer && hlIdx >= 0 && z !== hlIdx) continue;
           // Map: world Y = layer (z) so layers stack vertically
           m.makeTranslation(x - ox, z - oz, y - oy);
-          if (z === hlIdx && hlMesh) {
+          if (z === hlIdx && !isolateLayer && hlMesh) {
             hlMesh.setMatrixAt(hi++, m);
           } else {
             baseMesh.setMatrixAt(bi++, m);
