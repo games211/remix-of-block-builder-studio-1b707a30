@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { blockTexture } from "@/lib/blocks";
+import { blockTexture, blockTint } from "@/lib/blocks";
 
 export type PixelCell = { id: string; hex: string } | null;
 export type PixelGrid = PixelCell[][]; // [y][x]
@@ -190,8 +190,14 @@ export function PixelArt3D({ grid }: Props) {
 
     for (const [id, { hex, positions }] of buckets) {
       const tex = loadBlockTexture(id);
+      const tint = blockTint(id);
+      const matColor = tint
+        ? new THREE.Color(tint)
+        : tex
+        ? new THREE.Color(0xffffff)
+        : new THREE.Color(hex);
       const mat = new THREE.MeshStandardMaterial({
-        color: tex ? new THREE.Color(0xffffff) : new THREE.Color(hex),
+        color: matColor,
         map: tex ?? null,
         roughness: 0.85,
         metalness: 0.05,

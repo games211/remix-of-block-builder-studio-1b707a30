@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/sheet";
 import {
   BLOCKS,
-  blockTexture,
+  blockSwatchStyle,
   hexToRgb,
   nearestBlock,
   type BlockDef,
@@ -64,7 +64,6 @@ function BlockPicker({
     );
   }, [query]);
   const selected = BLOCKS.find((b) => b.id === value);
-  const tex = selected ? blockTexture(selected.id) : undefined;
   return (
     <div className="space-y-2">
       <Label className="text-xs uppercase tracking-wider text-muted-foreground">
@@ -73,12 +72,7 @@ function BlockPicker({
       <div className="flex items-center gap-2 rounded-md border border-border bg-card/50 px-2 py-1.5">
         <span
           className="h-8 w-8 shrink-0 rounded-sm border border-border bg-center bg-no-repeat"
-          style={{
-            backgroundColor: selected?.hex,
-            backgroundImage: tex ? `url(${tex})` : undefined,
-            backgroundSize: "100% 100%",
-            imageRendering: "pixelated",
-          }}
+          style={selected ? blockSwatchStyle(selected.id, selected.hex) : undefined}
         />
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium">
@@ -98,7 +92,6 @@ function BlockPicker({
       <div className="max-h-44 overflow-y-auto rounded-md border border-border bg-card/30 p-1">
         <div className="grid grid-cols-6 gap-1">
           {filtered.slice(0, 240).map((b) => {
-            const t = blockTexture(b.id);
             const on = b.id === value;
             return (
               <button
@@ -110,12 +103,7 @@ function BlockPicker({
                     ? "border-primary ring-2 ring-primary/40"
                     : "border-border hover:border-primary/50"
                 }`}
-                style={{
-                  backgroundColor: b.hex,
-                  backgroundImage: t ? `url(${t})` : undefined,
-                  backgroundSize: "100% 100%",
-                  imageRendering: "pixelated",
-                }}
+                style={blockSwatchStyle(b.id, b.hex)}
               />
             );
           })}
@@ -300,18 +288,12 @@ function GradientTool() {
             <div className="overflow-x-auto rounded-md border border-border bg-card/30 p-2">
               <div className="flex gap-0.5">
                 {gradient.map((b, i) => {
-                  const t = blockTexture(b.id);
                   return (
                     <div
                       key={i}
                       title={`${i + 1}. ${b.name}`}
                       className="aspect-square w-10 shrink-0 rounded-sm border border-border bg-center bg-no-repeat"
-                      style={{
-                        backgroundColor: b.hex,
-                        backgroundImage: t ? `url(${t})` : undefined,
-                        backgroundSize: "100% 100%",
-                        imageRendering: "pixelated",
-                      }}
+                      style={blockSwatchStyle(b.id, b.hex)}
                     />
                   );
                 })}
@@ -325,7 +307,6 @@ function GradientTool() {
             </Label>
             <ol className="mt-3 grid gap-1.5 sm:grid-cols-2 lg:grid-cols-3">
               {gradient.map((b, i) => {
-                const t = blockTexture(b.id);
                 return (
                   <li
                     key={i}
@@ -336,12 +317,7 @@ function GradientTool() {
                     </span>
                     <span
                       className="h-6 w-6 shrink-0 rounded-sm border border-border bg-center bg-no-repeat"
-                      style={{
-                        backgroundColor: b.hex,
-                        backgroundImage: t ? `url(${t})` : undefined,
-                        backgroundSize: "100% 100%",
-                        imageRendering: "pixelated",
-                      }}
+                      style={blockSwatchStyle(b.id, b.hex)}
                     />
                     <span className="flex-1 truncate font-medium">{b.name}</span>
                   </li>
