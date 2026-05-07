@@ -252,7 +252,7 @@ function PixelArtTool() {
             <h1 className="text-base font-semibold tracking-tight">Minecraft Tools</h1>
             <p className="text-xs text-muted-foreground -mt-0.5 truncate">Image to Pixel Art</p>
           </div>
-          <Button variant="ghost" size="icon" onClick={() => setTheme(theme === "light" ? "dark" : "light")} aria-label="Toggle theme">
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
             {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </Button>
         </div>
