@@ -160,7 +160,7 @@ function SkinEditor() {
 
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showOuter, setShowOuter] = useState(true);
+  const [showOuter, setShowOuter] = useState(false);
   const [visible, setVisible] = useState<Visibility>({
     head: true, body: true, rightArm: true, leftArm: true, rightLeg: true, leftLeg: true,
   });
