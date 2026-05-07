@@ -10,6 +10,7 @@ import {
   Sparkles,
   Image as ImageIcon,
   Palette,
+  Shirt,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -67,6 +68,14 @@ const TOOLS = [
     icon: Palette,
     available: true,
   },
+  {
+    to: "/skin-editor" as const,
+    title: "Skin Editor",
+    description:
+      "Edit Minecraft skins in your browser. Import from a PNG or grab any player's skin by username.",
+    icon: Shirt,
+    available: true,
+  },
 ];
 
 function Landing() {
@@ -115,6 +124,13 @@ function Landing() {
                 >
                   <Palette className="h-4 w-4" />
                   Block Gradient
+                </Link>
+                <Link
+                  to="/skin-editor"
+                  className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-left text-sm font-medium hover:bg-accent/40"
+                >
+                  <Shirt className="h-4 w-4" />
+                  Skin Editor
                 </Link>
                 <div className="px-3 py-2 text-xs uppercase tracking-wider text-muted-foreground">
                   More tools coming soon

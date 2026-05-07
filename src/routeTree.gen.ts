@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SkinEditorRouteImport } from './routes/skin-editor'
 import { Route as ShapeGeneratorRouteImport } from './routes/shape-generator'
 import { Route as PixelArtRouteImport } from './routes/pixel-art'
 import { Route as GradientRouteImport } from './routes/gradient'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SkinEditorRoute = SkinEditorRouteImport.update({
+  id: '/skin-editor',
+  path: '/skin-editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShapeGeneratorRoute = ShapeGeneratorRouteImport.update({
   id: '/shape-generator',
   path: '/shape-generator',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/gradient': typeof GradientRoute
   '/pixel-art': typeof PixelArtRoute
   '/shape-generator': typeof ShapeGeneratorRoute
+  '/skin-editor': typeof SkinEditorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/gradient': typeof GradientRoute
   '/pixel-art': typeof PixelArtRoute
   '/shape-generator': typeof ShapeGeneratorRoute
+  '/skin-editor': typeof SkinEditorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,25 @@ export interface FileRoutesById {
   '/gradient': typeof GradientRoute
   '/pixel-art': typeof PixelArtRoute
   '/shape-generator': typeof ShapeGeneratorRoute
+  '/skin-editor': typeof SkinEditorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/gradient' | '/pixel-art' | '/shape-generator'
+  fullPaths:
+    | '/'
+    | '/gradient'
+    | '/pixel-art'
+    | '/shape-generator'
+    | '/skin-editor'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/gradient' | '/pixel-art' | '/shape-generator'
-  id: '__root__' | '/' | '/gradient' | '/pixel-art' | '/shape-generator'
+  to: '/' | '/gradient' | '/pixel-art' | '/shape-generator' | '/skin-editor'
+  id:
+    | '__root__'
+    | '/'
+    | '/gradient'
+    | '/pixel-art'
+    | '/shape-generator'
+    | '/skin-editor'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +87,18 @@ export interface RootRouteChildren {
   GradientRoute: typeof GradientRoute
   PixelArtRoute: typeof PixelArtRoute
   ShapeGeneratorRoute: typeof ShapeGeneratorRoute
+  SkinEditorRoute: typeof SkinEditorRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/skin-editor': {
+      id: '/skin-editor'
+      path: '/skin-editor'
+      fullPath: '/skin-editor'
+      preLoaderRoute: typeof SkinEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shape-generator': {
       id: '/shape-generator'
       path: '/shape-generator'
@@ -107,6 +135,7 @@ const rootRouteChildren: RootRouteChildren = {
   GradientRoute: GradientRoute,
   PixelArtRoute: PixelArtRoute,
   ShapeGeneratorRoute: ShapeGeneratorRoute,
+  SkinEditorRoute: SkinEditorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

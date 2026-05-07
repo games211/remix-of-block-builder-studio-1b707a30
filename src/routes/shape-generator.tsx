@@ -19,6 +19,7 @@ import {
   Home as HomeIcon,
   Image as ImageIcon,
   Palette,
+  Shirt,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -182,6 +183,13 @@ function Home() {
                 >
                   <Palette className="h-4 w-4" />
                   Block Gradient
+                </Link>
+                <Link
+                  to="/skin-editor"
+                  className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-left text-sm font-medium hover:bg-accent/40"
+                >
+                  <Shirt className="h-4 w-4" />
+                  Skin Editor
                 </Link>
               </nav>
             </SheetContent>
