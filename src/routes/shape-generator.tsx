@@ -324,6 +324,18 @@ function Home() {
                 >
                   <ChevronRight className="h-4 w-4" />
                 </Button>
+                <Input
+                  type="number"
+                  value={safeIdx + 1}
+                  min={1}
+                  max={Math.max(1, totalLayers)}
+                  onChange={(e) =>
+                    setLayerIdx(
+                      Math.max(0, Math.min(totalLayers - 1, (Number(e.target.value) || 1) - 1)),
+                    )
+                  }
+                  className="h-7 w-16 text-right tabular-nums"
+                />
               </div>
               <div className="flex-1 min-w-40">
                 <Slider
