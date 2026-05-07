@@ -38,7 +38,6 @@ import {
   hexToRgb,
   isAvailableIn,
   nearestBlock,
-  blockTexture,
   blockSwatchStyle,
   type BlockDef,
 } from "@/lib/blocks";
