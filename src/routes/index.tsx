@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Sparkles,
   Image as ImageIcon,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -58,6 +59,14 @@ const TOOLS = [
     icon: ImageIcon,
     available: true,
   },
+  {
+    to: "/gradient" as const,
+    title: "Block Gradient",
+    description:
+      "Generate smooth Minecraft block gradients between any two blocks at any length.",
+    icon: Palette,
+    available: true,
+  },
 ];
 
 function Landing() {
@@ -99,6 +108,13 @@ function Landing() {
                 >
                   <ImageIcon className="h-4 w-4" />
                   Image to Pixel Art
+                </Link>
+                <Link
+                  to="/gradient"
+                  className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-left text-sm font-medium hover:bg-accent/40"
+                >
+                  <Palette className="h-4 w-4" />
+                  Block Gradient
                 </Link>
                 <div className="px-3 py-2 text-xs uppercase tracking-wider text-muted-foreground">
                   More tools coming soon
