@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/sheet";
 import {
   BLOCKS,
-  blockTexture,
   blockSwatchStyle,
   hexToRgb,
   nearestBlock,
