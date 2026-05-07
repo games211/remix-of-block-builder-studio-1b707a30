@@ -10,6 +10,7 @@ import {
   Home as HomeIcon,
   Palette,
   ArrowRight,
+  Shirt,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -214,6 +215,9 @@ function GradientTool() {
                 </Link>
                 <Link to="/gradient" className="flex items-center gap-3 rounded-md border border-primary/40 bg-accent/40 px-3 py-2 text-sm font-medium">
                   <Palette className="h-4 w-4" /> Block Gradient
+                </Link>
+                <Link to="/skin-editor" className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-accent/40">
+                  <Shirt className="h-4 w-4" /> Skin Editor
                 </Link>
               </nav>
             </SheetContent>
