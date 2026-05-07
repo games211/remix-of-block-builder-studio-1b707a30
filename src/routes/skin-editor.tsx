@@ -16,6 +16,12 @@ import {
   EyeOff,
   Undo2,
   Redo2,
+  Pencil,
+  Eraser,
+  Pipette,
+  MousePointer2,
+  Grid3x3,
+  Download,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -32,7 +38,13 @@ import {
 } from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { SkinViewer3D, type BodyPartKey, type Visibility } from "@/components/SkinViewer3D";
+import {
+  SkinViewer3D,
+  type BodyPartKey,
+  type Visibility,
+  type EditTool,
+  type SkinViewer3DHandle,
+} from "@/components/SkinViewer3D";
 import steveSkin from "@/assets/steve.png";
 import alexSkin from "@/assets/alex.png";
 import ariSkin from "@/assets/ari.png";
@@ -84,6 +96,11 @@ function SkinEditor() {
   const [skinUrl, setSkinUrlState] = useState<string>(steveSkin);
   const [past, setPast] = useState<string[]>([]);
   const [future, setFuture] = useState<string[]>([]);
+  const viewerRef = useRef<SkinViewer3DHandle | null>(null);
+
+  const [tool, setTool] = useState<EditTool>("none");
+  const [color, setColor] = useState<string>("#7a4a2b");
+  const [showGrid, setShowGrid] = useState<boolean>(false);
 
   const setSkinUrl = useCallback(
     (next: string) => {
@@ -254,7 +271,7 @@ function SkinEditor() {
 
       <div className="mx-auto grid max-w-[1600px] gap-4 sm:gap-6 px-3 sm:px-4 py-4 sm:py-6 lg:grid-cols-[360px_1fr]">
         <aside className="space-y-4">
-          <Card className="p-2">
+          <Card className="p-3 space-y-3">
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -279,6 +296,74 @@ function SkinEditor() {
                 Redo
               </Button>
             </div>
+            <div className="grid grid-cols-4 gap-1.5">
+              {([
+                { id: "none", label: "Move", icon: MousePointer2 },
+                { id: "pencil", label: "Paint", icon: Pencil },
+                { id: "eraser", label: "Erase", icon: Eraser },
+                { id: "eyedropper", label: "Pick", icon: Pipette },
+              ] as const).map((t) => {
+                const Icon = t.icon;
+                const on = tool === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setTool(t.id)}
+                    title={t.label}
+                    className={`flex flex-col items-center gap-1 rounded-md border px-1 py-1.5 text-[10px] font-medium transition-colors ${
+                      on
+                        ? "border-primary bg-accent/40"
+                        : "border-border hover:bg-accent/40"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex items-center gap-2">
+              <Label className="text-xs">Color</Label>
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="h-7 w-10 cursor-pointer rounded border border-border bg-transparent"
+              />
+              <Input
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="h-7 flex-1 font-mono text-xs"
+              />
+            </div>
+            <div className="flex items-center justify-between border-t border-border pt-2">
+              <div className="flex items-center gap-2">
+                <Grid3x3 className="h-4 w-4 text-muted-foreground" />
+                <Label className="text-sm font-medium">Pixel grid</Label>
+              </div>
+              <Switch checked={showGrid} onCheckedChange={setShowGrid} />
+            </div>
+            <Button
+              variant="default"
+              size="sm"
+              className="w-full gap-2"
+              onClick={() => {
+                const dataUrl = viewerRef.current?.exportPng();
+                if (!dataUrl) {
+                  toast.error("Nothing to export yet");
+                  return;
+                }
+                const a = document.createElement("a");
+                a.href = dataUrl;
+                a.download = `skin-${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+              }}
+            >
+              <Download className="h-4 w-4" />
+              Export PNG
+            </Button>
           </Card>
 
           <Card className="p-4 space-y-3" style={{ backgroundImage: "var(--gradient-surface)" }}>
@@ -429,9 +514,18 @@ function SkinEditor() {
             </div>
             <div className="h-[640px]">
               <SkinViewer3D
+                ref={viewerRef}
                 skinUrl={skinUrl}
                 showOuter={showOuter}
                 visible={visible}
+                showGrid={showGrid}
+                tool={tool}
+                color={color}
+                onPickColor={(hex) => {
+                  setColor(hex);
+                  setTool("pencil");
+                }}
+                onEdit={(dataUrl) => setSkinUrl(dataUrl)}
               />
             </div>
           </Card>
