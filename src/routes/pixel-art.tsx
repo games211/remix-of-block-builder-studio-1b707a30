@@ -323,7 +323,19 @@ function PixelArtTool() {
               <div>
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">Width</Label>
-                  <span className="text-xs tabular-nums text-muted-foreground">{width} blocks</span>
+                  <div className="flex items-center gap-1.5">
+                    <Input
+                      type="number"
+                      value={width}
+                      min={8}
+                      max={256}
+                      onChange={(e) =>
+                        onWidthChange(Math.max(8, Math.min(256, Number(e.target.value) || 8)))
+                      }
+                      className="h-7 w-16 text-right tabular-nums"
+                    />
+                    <span className="text-xs text-muted-foreground">blocks</span>
+                  </div>
                 </div>
                 <Slider
                   className="mt-2"
@@ -337,7 +349,19 @@ function PixelArtTool() {
               <div>
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">Height</Label>
-                  <span className="text-xs tabular-nums text-muted-foreground">{height} blocks</span>
+                  <div className="flex items-center gap-1.5">
+                    <Input
+                      type="number"
+                      value={height}
+                      min={8}
+                      max={256}
+                      onChange={(e) =>
+                        onHeightChange(Math.max(8, Math.min(256, Number(e.target.value) || 8)))
+                      }
+                      className="h-7 w-16 text-right tabular-nums"
+                    />
+                    <span className="text-xs text-muted-foreground">blocks</span>
+                  </div>
                 </div>
                 <Slider
                   className="mt-2"

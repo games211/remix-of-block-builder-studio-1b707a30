@@ -247,7 +247,19 @@ function GradientTool() {
           <Card className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-medium">Gradient length</Label>
-              <span className="text-xs tabular-nums text-muted-foreground">{length} blocks</span>
+              <div className="flex items-center gap-1.5">
+                <Input
+                  type="number"
+                  value={length}
+                  min={2}
+                  max={64}
+                  onChange={(e) =>
+                    setLength(Math.max(2, Math.min(64, Number(e.target.value) || 2)))
+                  }
+                  className="h-7 w-16 text-right tabular-nums"
+                />
+                <span className="text-xs text-muted-foreground">blocks</span>
+              </div>
             </div>
             <Slider
               value={[length]}
