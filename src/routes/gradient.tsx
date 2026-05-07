@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import {
   Sheet,
   SheetContent,
@@ -119,6 +120,7 @@ function GradientTool() {
   const [fromId, setFromId] = useState<string>("grass_block");
   const [toId, setToId] = useState<string>("netherrack");
   const [length, setLength] = useState<number>(16);
+  const [removeDuplicates, setRemoveDuplicates] = useState<boolean>(false);
 
   const palette = useMemo(
     () => BLOCKS.map((b) => ({ block: b, rgb: hexToRgb(b.hex) })),
@@ -167,8 +169,18 @@ function GradientTool() {
       if (block) out.push(block);
       last = block;
     }
+    if (removeDuplicates) {
+      const seen = new Set<string>();
+      const deduped: BlockDef[] = [];
+      for (const b of out) {
+        if (seen.has(b.id)) continue;
+        seen.add(b.id);
+        deduped.push(b);
+      }
+      return deduped;
+    }
     return out;
-  }, [from, safeTo, length, palette]);
+  }, [from, safeTo, length, palette, removeDuplicates]);
 
   const copyList = () => {
     const text = gradient.map((b, i) => `${i + 1}. ${b.name}`).join("\n");
@@ -258,6 +270,19 @@ function GradientTool() {
                   {n}
                 </button>
               ))}
+            </div>
+            <div className="flex items-center justify-between border-t border-border pt-3">
+              <div className="space-y-0.5">
+                <Label htmlFor="dedupe" className="text-sm font-medium">Remove duplicates</Label>
+                <p className="text-[11px] text-muted-foreground">
+                  Show each block only once
+                </p>
+              </div>
+              <Switch
+                id="dedupe"
+                checked={removeDuplicates}
+                onCheckedChange={setRemoveDuplicates}
+              />
             </div>
           </Card>
 
