@@ -172,16 +172,22 @@ export function Voxel3D({ voxels, highlightLayer, isolateLayer = false }: Props)
     const highlightCol = readColor("--accent", "oklch(0.92 0.05 200)");
 
     const geom = new THREE.BoxGeometry(1, 1, 1);
+    const tex = new THREE.TextureLoader().load("/textures/blocks/stone_bricks.png");
+    tex.magFilter = THREE.NearestFilter;
+    tex.minFilter = THREE.NearestFilter;
+    tex.colorSpace = THREE.SRGBColorSpace;
     const baseMat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(filled),
-      roughness: 0.55,
+      map: tex,
+      color: new THREE.Color(0xffffff),
+      roughness: 0.85,
       metalness: 0.05,
     });
     const hlMat = new THREE.MeshStandardMaterial({
+      map: tex,
       color: new THREE.Color(highlightCol),
       emissive: new THREE.Color(filled),
       emissiveIntensity: 0.35,
-      roughness: 0.4,
+      roughness: 0.6,
     });
 
     // Two instanced meshes: base + highlight (current layer)
