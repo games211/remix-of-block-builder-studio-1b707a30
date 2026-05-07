@@ -9,6 +9,7 @@ import {
   Sun,
   Home as HomeIcon,
   Upload,
+  Palette,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -241,6 +242,9 @@ function PixelArtTool() {
                 </Link>
                 <Link to="/pixel-art" className="flex items-center gap-3 rounded-md border border-primary/40 bg-accent/40 px-3 py-2 text-sm font-medium">
                   <ImageIcon className="h-4 w-4" /> Image to Pixel Art
+                </Link>
+                <Link to="/gradient" className="flex items-center gap-3 rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-accent/40">
+                  <Palette className="h-4 w-4" /> Block Gradient
                 </Link>
               </nav>
             </SheetContent>
