@@ -1,6 +1,7 @@
 // Minecraft block palette for pixel-art mapping.
 // Hex colors are derived from the bundled 26.1 default texture pack at runtime.
 import { BLOCK_TEXTURES } from "./block-textures";
+import type { CSSProperties } from "react";
 
 export type BlockDef = {
   id: string;
@@ -505,10 +506,10 @@ export function blockTexture(id: string): string | undefined {
 }
 
 /** CSS style props for rendering a block swatch with proper biome tint. */
-export function blockSwatchStyle(id: string, hex: string): React.CSSProperties {
+export function blockSwatchStyle(id: string, hex: string): CSSProperties {
   const tex = blockTexture(id);
   const tint = blockTint(id);
-  const base: React.CSSProperties = {
+  const base: CSSProperties = {
     backgroundColor: tint ?? hex,
     backgroundImage: tex ? `url(${tex})` : undefined,
     backgroundSize: "100% 100%",
