@@ -435,7 +435,6 @@ function PixelArtTool() {
                   <div className="grid grid-cols-2 gap-1.5">
                     {visible.map((b) => {
                       const on = !!enabled[b.id];
-                      const tex = blockTexture(b.id);
                       return (
                         <button
                           key={b.id}
@@ -449,12 +448,7 @@ function PixelArtTool() {
                         >
                           <span
                             className="h-4 w-4 shrink-0 rounded-sm border border-border bg-center bg-no-repeat"
-                            style={{
-                              backgroundColor: b.hex,
-                              backgroundImage: tex ? `url(${tex})` : undefined,
-                              backgroundSize: "100% 100%",
-                              imageRendering: "pixelated",
-                            }}
+                            style={blockSwatchStyle(b.id, b.hex)}
                           />
                           <span className="truncate">{b.name}</span>
                         </button>
