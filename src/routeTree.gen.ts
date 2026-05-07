@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShapeGeneratorRouteImport } from './routes/shape-generator'
 import { Route as PixelArtRouteImport } from './routes/pixel-art'
+import { Route as GradientRouteImport } from './routes/gradient'
 import { Route as IndexRouteImport } from './routes/index'
 
 const ShapeGeneratorRoute = ShapeGeneratorRouteImport.update({
@@ -23,6 +24,11 @@ const PixelArtRoute = PixelArtRouteImport.update({
   path: '/pixel-art',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GradientRoute = GradientRouteImport.update({
+  id: '/gradient',
+  path: '/gradient',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,30 +37,34 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/gradient': typeof GradientRoute
   '/pixel-art': typeof PixelArtRoute
   '/shape-generator': typeof ShapeGeneratorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/gradient': typeof GradientRoute
   '/pixel-art': typeof PixelArtRoute
   '/shape-generator': typeof ShapeGeneratorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/gradient': typeof GradientRoute
   '/pixel-art': typeof PixelArtRoute
   '/shape-generator': typeof ShapeGeneratorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/pixel-art' | '/shape-generator'
+  fullPaths: '/' | '/gradient' | '/pixel-art' | '/shape-generator'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/pixel-art' | '/shape-generator'
-  id: '__root__' | '/' | '/pixel-art' | '/shape-generator'
+  to: '/' | '/gradient' | '/pixel-art' | '/shape-generator'
+  id: '__root__' | '/' | '/gradient' | '/pixel-art' | '/shape-generator'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GradientRoute: typeof GradientRoute
   PixelArtRoute: typeof PixelArtRoute
   ShapeGeneratorRoute: typeof ShapeGeneratorRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PixelArtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/gradient': {
+      id: '/gradient'
+      path: '/gradient'
+      fullPath: '/gradient'
+      preLoaderRoute: typeof GradientRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GradientRoute: GradientRoute,
   PixelArtRoute: PixelArtRoute,
   ShapeGeneratorRoute: ShapeGeneratorRoute,
 }
