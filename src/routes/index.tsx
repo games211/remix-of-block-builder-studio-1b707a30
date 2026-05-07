@@ -162,8 +162,7 @@ function Landing() {
             </span>
           </h2>
           <p className="mx-auto max-w-2xl text-base sm:text-lg text-muted-foreground">
-            Free, browser-based tools to help you plan and create incredible builds —
-            from perfect spheres to complex domes, with more on the way.
+            Generate smooth Minecraft block gradients between any two blocks.
           </p>
           <div className="flex flex-wrap justify-center gap-3 pt-2">
             <Button asChild size="lg" className="shadow-[var(--shadow-elegant)]">
