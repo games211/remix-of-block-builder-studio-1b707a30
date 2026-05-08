@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Theme = "light" | "dark";
 const KEY = "theme";
@@ -12,12 +12,17 @@ function getInitial(): Theme {
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>("light");
+  const initialized = useRef(false);
 
   useEffect(() => {
-    setTheme(getInitial());
+    const initial = getInitial();
+    setTheme(initial);
+    document.documentElement.classList.toggle("dark", initial === "dark");
+    initialized.current = true;
   }, []);
 
   useEffect(() => {
+    if (!initialized.current) return;
     document.documentElement.classList.toggle("dark", theme === "dark");
     try {
       localStorage.setItem(KEY, theme);
