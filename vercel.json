@@ -1,12 +1,27 @@
 {
-  "outputDirectory": "dist/client",
-  "functions": {
-    "dist/server/server.js": {
-      "runtime": "nodejs20.x"
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/server/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/client/**",
+      "use": "@vercel/static"
     }
-  },
+  ],
   "routes": [
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/(.*)", "dest": "/dist/server/server.js" }
+    {
+      "src": "/assets/(.*)",
+      "dest": "/dist/client/assets/$1"
+    },
+    {
+      "src": "/(favicon\\.ico|robots\\.txt|.*\\.(png|jpg|jpeg|svg|webp|gif|ico|txt|xml|json|woff|woff2|ttf|otf))",
+      "dest": "/dist/client/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/server/server.js"
+    }
   ]
 }
