@@ -1,6 +1,0 @@
-[build]
-  command = "npm run build"
-  publish = "dist/client"
-
-# TanStack Start's Netlify preset emits the SSR handler as a Netlify Function
-# and wires routing automatically. No redirects needed here.
